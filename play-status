@@ -1,0 +1,35 @@
+#!/usr/bin/python
+
+import argparse
+import re
+
+import messaging.utils
+
+def main():
+    cusd_match = re.compile('[+]CUSD: 0,"([^"]+)"').match
+    ap = argparse.ArgumentParser()
+    ap.add_argument('device', metavar='<device>')
+    options = ap.parse_args()
+    with open(options.device, 'r+b', 0) as tty:
+        tty.write('AT+CUSD=1,"AA182C3602",15\r')
+        tty.flush()
+        while 1:
+            line = tty.readline().rstrip()
+            if not line:
+                continue
+            if line.startswith('^DSFLOWRPT'):
+                continue
+            match = cusd_match(line)
+            if match is None:
+                print '#', line
+            else:
+                s = match.group(1)
+                s = messaging.utils.unpack_msg(s)
+                print(s)
+                break
+        tty.write('AT+CUSD=0\r')
+
+if __name__ == '__main__':
+    main()
+
+# vim:ts=4 sw=4 et
