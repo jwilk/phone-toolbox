@@ -4,6 +4,8 @@
 # Copyright © 2013-2018 Jakub Wilk <jwilk@jwilk.net>
 # SPDX-License-Identifier: MIT
 
+from __future__ import print_function
+
 import argparse
 import re
 
@@ -25,7 +27,7 @@ def main():
                 continue
             match = cusd_match(line)
             if match is None:
-                print '#', line
+                print('#', line)
             else:
                 s = match.group(1)
                 s = messaging.utils.unpack_msg(s)
