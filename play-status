@@ -8,7 +8,7 @@ import messaging.utils
 def main():
     cusd_match = re.compile('[+]CUSD: 0,"([^"]+)"').match
     ap = argparse.ArgumentParser()
-    ap.add_argument('device', metavar='<device>')
+    ap.add_argument('device', metavar='DEVICE')
     options = ap.parse_args()
     with open(options.device, 'r+b', 0) as tty:
         tty.write('AT+CUSD=1,"AA182C3602",15\r')
