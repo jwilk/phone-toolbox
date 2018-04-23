@@ -23,7 +23,7 @@ def main():
             line = tty.readline().rstrip()
             if not line:
                 continue
-            if line.startswith('^DSFLOWRPT'):
+            if line.startswith('^'):
                 continue
             match = cusd_match(line)
             if match is None:
