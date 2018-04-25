@@ -1,0 +1,57 @@
+#!/usr/bin/python
+# encoding=UTF-8
+
+# Copyright © 2013-2018 Jakub Wilk <jwilk@jwilk.net>
+# SPDX-License-Identifier: MIT
+
+from __future__ import print_function
+
+import argparse
+import re
+
+import messaging.utils
+
+def main():
+    cusd_match = re.compile('[+]CUSD: ([01]),"([^"]+)"').match
+    ap = argparse.ArgumentParser()
+    ap.add_argument('device', metavar='DEVICE')
+    options = ap.parse_args()
+    def send(s):
+        line = 'AT+CUSD=1,"{}",15\r'.format(s)
+        tty.write(line)
+        tty.flush()
+        while True:
+            line = tty.readline()
+            if line == '':
+                raise EOFError
+            line = line.rstrip()
+            if not line:
+                continue
+            if line.startswith('^'):
+                continue
+            match = cusd_match(line)
+            if match is None:
+                print('#', line)
+            else:
+                s = match.group(2)
+                s = messaging.utils.unpack_msg(s)
+                print(s)
+                code = int(match.group(1))
+                return code
+    def reset():
+        tty.write('AT+CUSD=0\r')
+        tty.flush()
+    with open(options.device, 'r+b', 0) as tty:
+        send('AA182C3602')
+        reset()
+        (send('AA180DA68A8D46') and
+            send('31') and
+            send('31') and
+            send('33')
+        )
+        reset()
+
+if __name__ == '__main__':
+    main()
+
+# vim:ts=4 sts=4 sw=4 et
