@@ -19,7 +19,7 @@ def main():
     with open(options.device, 'r+b', 0) as tty:
         tty.write('AT+CUSD=1,"AA182C3602",15\r')
         tty.flush()
-        while 1:
+        while True:
             line = tty.readline().rstrip()
             if not line:
                 continue
