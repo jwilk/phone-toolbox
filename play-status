@@ -20,7 +20,10 @@ def main():
         tty.write('AT+CUSD=1,"AA182C3602",15\r')
         tty.flush()
         while True:
-            line = tty.readline().rstrip()
+            line = tty.readline()
+            if line == '':
+                raise EOFError
+            line = line.rstrip()
             if not line:
                 continue
             if line.startswith('^'):
