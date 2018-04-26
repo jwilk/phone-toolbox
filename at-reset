@@ -6,7 +6,7 @@
 set -e -u
 if [ $# -ne 1 ]
 then
-    printf 'Usage: %s TTY\n' "${0##*/}" >&2
+    printf 'Usage: %s DEVICE\n' "${0##*/}" >&2
     exit 1
 fi
 tty="$1"
