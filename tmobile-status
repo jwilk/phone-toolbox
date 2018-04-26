@@ -42,6 +42,7 @@ def main():
         tty.write('AT+CUSD=0\r')
         tty.flush()
     with open(options.device, 'r+b', 0) as tty:
+        reset()
         send('AA182C3602')
         reset()
         (send('AA180DA68A8D46') and
