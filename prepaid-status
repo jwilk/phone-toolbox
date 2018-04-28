@@ -33,7 +33,7 @@ def dial(ctxt, n):
 
 networks = [
     'pl-t-mobile',
-    'pl-t-play',
+    'pl-play',
 ]
 
 def main():
@@ -92,7 +92,7 @@ def do_pl_t_mobile(ctxt):
     dial_101(ctxt)
     dial_140_1(ctxt)
 
-def do_pl_t_play(ctxt):
+def do_pl_play(ctxt):
     dial_101(ctxt)
 
 if __name__ == '__main__':
