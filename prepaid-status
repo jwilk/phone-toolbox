@@ -5,18 +5,21 @@
 # SPDX-License-Identifier: MIT
 
 import argparse
+import types
 
 import gammu
 
-...  # Python 3 is required
+lambda: (yield from 0)  # Python >= 3.3 is required
 
-def dial(sm, n):
+def dial(ctxt, n):
     def callback(sm, cb_type, data):
         nonlocal reply
         if cb_type != 'USSD':
             raise RuntimeError('unexpected callback type: {tp}'.format(tp=cb_type))
         reply = dict(data)
-    print('>>>', n)
+    if ctxt.debug:
+        print('>>>', n)
+    sm = ctxt.sm
     sm.SetIncomingUSSD()
     sm.SetIncomingCallback(callback)
     try:
@@ -37,6 +40,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('-c', '--config')
     ap.add_argument('-n', '--network', required=True, choices=networks)
+    ap.add_argument('--debug', action='store_true')
     options = ap.parse_args()
     sm = gammu.StateMachine()
     kwargs = {}
@@ -45,10 +49,15 @@ def main():
     sm.ReadConfig(**kwargs)
     sm.Init()
     do = globals()['do_' + options.network.replace('-', '_')]
-    do(sm)
+    ctxt = types.SimpleNamespace(
+        sm=sm,
+        debug=options.debug,
+    )
+    do(ctxt)
 
-def dial_101(sm):
-    reply = dial(sm, '*101#')
+def dial_101(ctxt):
+    sm = ctxt.sm
+    reply = dial(ctxt, '*101#')
     text = reply['Text']
     print(text)
     if reply['Status'] == 'NoActionNeeded':
@@ -56,9 +65,10 @@ def dial_101(sm):
     else:
         raise NotImplementedError
 
-def dial_140_1(sm):
+def dial_140_1(ctxt):
     # PL T-Mobile
-    reply = dial(sm, '*140*1##')
+    sm = ctxt.sm
+    reply = dial(ctxt, '*140*1##')
     while True:
         text = reply['Text']
         print(text)
@@ -71,19 +81,19 @@ def dial_140_1(sm):
             raise NotImplementedError
         lines = text.splitlines()
         if '1. . Dalej' in lines:
-            reply = dial(sm, '1')
+            reply = dial(ctxt, '1')
             continue
         if '9. Koniec' in lines:
-            reply = dial(sm, '9')
+            reply = dial(ctxt, '9')
             continue
         raise NotImplementedError
 
-def do_pl_t_mobile(sm):
-    dial_101(sm)
-    dial_140_1(sm)
+def do_pl_t_mobile(ctxt):
+    dial_101(ctxt)
+    dial_140_1(ctxt)
 
-def do_pl_t_play(sm):
-    dial_101(sm)
+def do_pl_t_play(ctxt):
+    dial_101(ctxt)
 
 if __name__ == '__main__':
     main()
