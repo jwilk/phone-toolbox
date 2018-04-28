@@ -56,7 +56,6 @@ def main():
     do(ctxt)
 
 def dial_101(ctxt):
-    sm = ctxt.sm
     reply = dial(ctxt, '*101#')
     text = reply['Text']
     print(text)
@@ -67,7 +66,6 @@ def dial_101(ctxt):
 
 def dial_140_1(ctxt):
     # PL T-Mobile
-    sm = ctxt.sm
     reply = dial(ctxt, '*140*1##')
     while True:
         text = reply['Text']
