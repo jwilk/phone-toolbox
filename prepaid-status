@@ -1,0 +1,89 @@
+#!/usr/bin/env python3
+
+# Copyright © 2018 Jakub Wilk <jwilk@jwilk.net>
+# SPDX-License-Identifier: MIT
+
+import argparse
+import enum
+
+import gammu
+
+def dial(sm, n):
+    def callback(sm, cb_type, data):
+        nonlocal reply
+        if cb_type != 'USSD':
+            raise RuntimeError('unexpected callback type: {tp}'.format(tp=cb_type))
+        reply = dict(data)
+    print('>>>', n)
+    sm.SetIncomingUSSD()
+    sm.SetIncomingCallback(callback)
+    try:
+        sm.DialService(n)
+        reply = None
+        while reply is None:
+            sm.ReadDevice()
+        return reply
+    finally:
+        sm.SetIncomingCallback(None)
+
+networks = [
+    'pl-t-mobile',
+    'pl-t-play',
+]
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument('-c', '--config')
+    ap.add_argument('-n', '--network', required=True, choices=networks)
+    options = ap.parse_args()
+    sm = gammu.StateMachine()
+    kwargs = {}
+    if options.config is not None:
+        kwargs.update(Filename=options.config)
+    sm.ReadConfig(**kwargs)
+    sm.Init()
+    do = globals()['do_' + options.network.replace('-', '_')]
+    do(sm)
+
+def dial_101(sm):
+    reply = dial(sm, '*101#')
+    text = reply['Text']
+    print(text)
+    if reply['Status'] == 'NoActionNeeded':
+        return
+    else:
+        raise NotImplementedError
+
+def dial_140_1(sm):
+    # PL T-Mobile
+    reply = dial(sm, '*140*1##')
+    while True:
+        text = reply['Text']
+        print(text)
+        status = reply['Status']
+        if status == 'NoActionNeeded':
+            return
+        elif status == 'ActionNeeded':
+            pass
+        else:
+            raise NotImplementedError
+        lines = text.splitlines()
+        if '1. . Dalej' in lines:
+            reply = dial(sm, '1')
+            continue
+        if '9. Koniec' in lines:
+            reply = dial(sm, '9')
+            continue
+        raise NotImplementedError
+
+def do_pl_t_mobile(sm):
+    dial_101(sm)
+    dial_140_1(sm)
+
+def do_pl_t_play(sm):
+    dial_101(sm)
+
+if __name__ == '__main__':
+    main()
+
+# vim:ts=4 sts=4 sw=4 et
