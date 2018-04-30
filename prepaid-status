@@ -40,7 +40,7 @@ networks = [
     'pl-play',
 ]
 
-class TameGammuLoggin(threading.Thread):
+class TameGammuLogging(threading.Thread):
 
     def __init__(self):
         threading.Thread.__init__(self)
@@ -79,7 +79,7 @@ def main():
         sm=sm,
         debug=options.debug,
     )
-    tgl = TameGammuLoggin()
+    tgl = TameGammuLogging()
     tgl.start()
     try:
         do(ctxt)
