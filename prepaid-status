@@ -6,6 +6,7 @@
 
 import argparse
 import os
+import re
 import sys
 import threading
 import types
@@ -88,7 +89,8 @@ def main():
 def dial_101(ctxt):
     reply = dial(ctxt, '*101#')
     text = reply['Text']
-    print(text)
+    text = text.rstrip() + '\n'
+    print(text, end='')
     if reply['Status'] == 'NoActionNeeded':
         return
     else:
@@ -99,7 +101,10 @@ def dial_140_1(ctxt):
     reply = dial(ctxt, '*140*1##')
     while True:
         text = reply['Text']
-        print(text)
+        text = text.rstrip() + '\n'
+        lines = text.splitlines()
+        text = re.sub(r'^[0-9]+([.] )?[.] (Dalej|Powrot|Koniec)\n|^\n', '', text + '\n', flags=re.MULTILINE)
+        print(text, end='')
         status = reply['Status']
         if status == 'NoActionNeeded':
             return
@@ -107,7 +112,6 @@ def dial_140_1(ctxt):
             pass
         else:
             raise NotImplementedError
-        lines = text.splitlines()
         if '1. . Dalej' in lines:
             reply = dial(ctxt, '1')
             continue
