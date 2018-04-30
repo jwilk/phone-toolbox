@@ -81,6 +81,9 @@ def dial_140_1(ctxt):
         if '1. . Dalej' in lines:
             reply = dial(ctxt, '1')
             continue
+        if '3. . Koniec' in lines:
+            reply = dial(ctxt, '3')
+            continue
         if '9. Koniec' in lines:
             reply = dial(ctxt, '9')
             continue
