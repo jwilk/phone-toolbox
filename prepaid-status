@@ -94,7 +94,7 @@ def dial_101(ctxt):
     if reply['Status'] == 'NoActionNeeded':
         return
     else:
-        raise NotImplementedError
+        raise NotImplementedError('unexpected status: {st}'.format(st=reply['Status']))
 
 def dial_140_1(ctxt):
     # PL T-Mobile
@@ -111,7 +111,7 @@ def dial_140_1(ctxt):
         elif status == 'ActionNeeded':
             pass
         else:
-            raise NotImplementedError
+            raise NotImplementedError('unexpected status: {st}'.format(st=reply['Status']))
         if '1. . Dalej' in lines:
             reply = dial(ctxt, '1')
             continue
