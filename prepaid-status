@@ -89,8 +89,8 @@ def main():
 def dial_101(ctxt):
     reply = dial(ctxt, '*101#')
     text = reply['Text']
-    text = text.rstrip() + '\n'
-    print(text, end='')
+    text = text.rstrip()
+    print(text)
     if reply['Status'] == 'NoActionNeeded':
         return
     else:
