@@ -129,6 +129,7 @@ def do_pl_t_mobile(ctxt):
 
 def do_pl_play(ctxt):
     simple_dial(ctxt, '*101#')
+    simple_dial(ctxt, '*107#')
 
 if __name__ == '__main__':
     main()
