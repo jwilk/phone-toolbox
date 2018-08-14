@@ -86,8 +86,8 @@ def main():
     finally:
         tgl.close()
 
-def dial_101(ctxt):
-    reply = dial(ctxt, '*101#')
+def simple_dial(ctxt, n):
+    reply = dial(ctxt, n)
     text = reply['Text']
     text = text.rstrip()
     print(text)
@@ -124,11 +124,11 @@ def dial_140_1(ctxt):
         raise NotImplementedError
 
 def do_pl_t_mobile(ctxt):
-    dial_101(ctxt)
+    simple_dial(ctxt, '*101#')
     dial_140_1(ctxt)
 
 def do_pl_play(ctxt):
-    dial_101(ctxt)
+    simple_dial(ctxt, '*101#')
 
 if __name__ == '__main__':
     main()
