@@ -66,6 +66,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('-c', '--config')
     ap.add_argument('-n', '--network', required=True, choices=networks)
+    ap.add_argument('--variant', type=int, default=0)
     ap.add_argument('--debug', action='store_true')
     options = ap.parse_args()
     sm = gammu.StateMachine()
@@ -77,6 +78,8 @@ def main():
     do = globals()['do_' + options.network.replace('-', '_')]
     ctxt = types.SimpleNamespace(
         sm=sm,
+        ap=ap,
+        variant=options.variant,
         debug=options.debug,
     )
     tgl = TameGammuLogging()
@@ -96,9 +99,19 @@ def simple_dial(ctxt, n):
     else:
         raise NotImplementedError('unexpected status: {st}'.format(st=reply['Status']))
 
-def dial_140_1(ctxt):
+def dial_140(ctxt):
     # PL T-Mobile
-    reply = dial(ctxt, '*140*1##')
+    vdict = {
+        0: '*140*1##',
+        1: '*140*296*1#',
+        25: '*140*265*1#',
+        30: '*150*150*1#',
+    }
+    try:
+        no = vdict[ctxt.variant]
+    except KeyError:
+        ap.error('unknown variant {0}'.format(ctxt.variant))
+    reply = dial(ctxt, no)
     while True:
         text = reply['Text']
         text = text.rstrip() + '\n'
@@ -125,7 +138,7 @@ def dial_140_1(ctxt):
 
 def do_pl_t_mobile(ctxt):
     simple_dial(ctxt, '*101#')
-    dial_140_1(ctxt)
+    dial_140(ctxt)
 
 def do_pl_play(ctxt):
     simple_dial(ctxt, '*101#')
