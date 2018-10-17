@@ -110,7 +110,7 @@ def dial_140(ctxt):
     try:
         no = vdict[ctxt.variant]
     except KeyError:
-        ap.error('unknown variant {0}'.format(ctxt.variant))
+        ctxt.ap.error('unknown variant {0}'.format(ctxt.variant))
     reply = dial(ctxt, no)
     while True:
         text = reply['Text']
