@@ -117,6 +117,7 @@ def dial_140(ctxt):
         text = text.rstrip() + '\n'
         lines = text.splitlines()
         text = re.sub(r'^[0-9]+([.] )?[.] (Dalej|Powrot|Koniec)\n|^\n', '', text + '\n', flags=re.MULTILINE)
+        text = re.sub(r'(?<=[.])Szczegoly na www[.]t-mobile[.]pl$', '', text, flags=re.MULTILINE)
         print(text, end='')
         status = reply['Status']
         if status == 'NoActionNeeded':
