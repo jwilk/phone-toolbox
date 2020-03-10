@@ -50,7 +50,7 @@ class TameGammuLogging(threading.Thread):
         (pipe_r_fd, pipe_w_fd) = os.pipe()
         os.dup2(pipe_w_fd, stdout_fd)
         os.close(pipe_w_fd)
-        self.__pipe_fd = open(pipe_r_fd, 'rb', buffering=1)
+        self.__pipe_fd = open(pipe_r_fd, 'rb', buffering=0)
 
     def run(self):
         for line in self.__pipe_fd:
