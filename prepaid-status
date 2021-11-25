@@ -13,7 +13,7 @@ import types
 
 import gammu
 
-lambda: (yield from 0)  # Python >= 3.3 is required
+lambda: (yield from [])  # Python >= 3.3 is required
 
 def dial(ctxt, n):
     def callback(sm, cb_type, data):
