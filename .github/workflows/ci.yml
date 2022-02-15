@@ -41,7 +41,7 @@ jobs:
     - name: run pydiatra
       run: |
         python -m pip install pydiatra
-        python -m pydiatra .
+        python -m pydiatra -v .
     - name: run shellcheck
       run:
         grep -rl '^#!.*/sh$' * | xargs -t shellcheck
