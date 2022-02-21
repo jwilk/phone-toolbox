@@ -19,7 +19,7 @@ def dial(ctxt, n):
     def callback(sm, cb_type, data):
         nonlocal reply
         if cb_type != 'USSD':
-            raise RuntimeError('unexpected callback type: {tp}'.format(tp=cb_type))
+            raise RuntimeError(f'unexpected callback type: {cb_type}')
         reply = dict(data)
     if ctxt.debug:
         print('>>>', n)
@@ -110,7 +110,7 @@ def dial_140(ctxt):
     try:
         no = vdict[ctxt.variant]
     except KeyError:
-        ctxt.ap.error('unknown variant {0}'.format(ctxt.variant))
+        ctxt.ap.error(f'unknown variant {ctxt.variant}')
     reply = dial(ctxt, no)
     while True:
         text = reply['Text']
