@@ -38,6 +38,7 @@ def dial(ctxt, n):
 networks = [
     'pl-t-mobile',
     'pl-play',
+    'pl-lyca',
 ]
 
 class TameGammuLogging(threading.Thread):
@@ -144,6 +145,10 @@ def do_pl_t_mobile(ctxt):
 def do_pl_play(ctxt):
     simple_dial(ctxt, '*101#')
     simple_dial(ctxt, '*107#')
+
+def do_pl_lyca(ctxt):
+    simple_dial(ctxt, '*131#')
+    simple_dial(ctxt, '*137#')
 
 if __name__ == '__main__':
     main()
