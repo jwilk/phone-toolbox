@@ -64,11 +64,15 @@ class TameGammuLogging(threading.Thread):
         os.close(sys.stdout.fileno())
 
 def main():
-    ap = argparse.ArgumentParser()
+    ap = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('-c', '--config')
-    ap.add_argument('-n', '--network', required=True, choices=networks)
+    ap.add_argument('-n', '--network', required=True, choices=networks, metavar='NETWORK')
     ap.add_argument('--variant', type=int, default=0)
     ap.add_argument('--debug', action='store_true')
+    epilog = ['supported networks:']
+    for network in sorted(networks):
+        epilog += [f'* {network}']
+    ap.epilog = '\n'.join(epilog)
     options = ap.parse_args()
     sm = gammu.StateMachine()
     kwargs = {}
