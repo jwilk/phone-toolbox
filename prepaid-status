@@ -65,7 +65,7 @@ class TameGammuLogging(threading.Thread):
 
 def main():
     ap = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument('-c', '--config')
+    ap.add_argument('-c', '--config', help='Gammu configuration file')
     ap.add_argument('-n', '--network', required=True, choices=networks, metavar='NETWORK')
     ap.add_argument('--variant', type=int, default=0)
     ap.add_argument('--debug', action='store_true')
