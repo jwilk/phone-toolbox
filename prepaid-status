@@ -73,7 +73,7 @@ def main():
     ap = argparse.ArgumentParser(formatter_class=HelpFormatter)
     ap.add_argument('-c', '--config', metavar='PATH', help='Gammu configuration file')
     ap.add_argument('-n', '--network', required=True, choices=networks, metavar='NET')
-    ap.add_argument('--variant', type=int, default=0)
+    ap.add_argument('--variant', metavar='N', type=int, default=0)
     ap.add_argument('--debug', action='store_true')
     epilog = ['supported networks:']
     for network in sorted(networks):
