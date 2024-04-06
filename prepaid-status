@@ -17,6 +17,7 @@ import gammu
 
 def dial(ctxt, n):
     def callback(sm, cb_type, data):
+        del sm
         nonlocal reply
         if cb_type != 'USSD':
             raise RuntimeError(f'unexpected callback type: {cb_type}')
