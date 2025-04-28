@@ -79,7 +79,7 @@ def main():
     epilog = ['supported networks:']
     for network in sorted(networks):
         epilog += [f'* {network}']
-    ap.epilog = '\n'.join(epilog)
+    ap.epilog = str.join('\n', epilog)
     options = ap.parse_args()
     sm = gammu.StateMachine()
     kwargs = {}
